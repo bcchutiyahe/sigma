@@ -181,7 +181,7 @@ export default function UniversityComparison() {
   }
 
   return (
-    <section style={{ background: 'var(--cream)', padding: '88px 0' }}>
+    <section style={{ background: 'var(--cream)', padding: '88px 0', overflowX: 'hidden' }}>
       <div className="container">
 
         {/* Header */}

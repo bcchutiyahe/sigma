@@ -37,6 +37,7 @@ body {
   background: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, .font-playfair {
@@ -370,4 +371,14 @@ h1, h2, h3, .font-playfair {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
   border-radius: 4px;
+}
+
+/* ─── Hero stats grid ─── */
+.stats-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 640px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }

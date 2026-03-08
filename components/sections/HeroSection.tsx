@@ -88,11 +88,13 @@ export default function HeroSection() {
           </div>
 
           {/* Stats row */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gap: 2,
-            marginTop: 56,
+          <style>{`
+            .em-hero-stats { display: grid; grid-template-columns: repeat(2, 1fr); }
+            @media (min-width: 560px) { .em-hero-stats { grid-template-columns: repeat(4, 1fr); } }
+          `}</style>
+          <div className="em-hero-stats" style={{
+            gap: 0,
+            marginTop: 48,
             background: 'rgba(255,255,255,0.06)',
             border: '1px solid rgba(255,255,255,0.1)',
             borderRadius: 16,
@@ -107,12 +109,13 @@ export default function HeroSection() {
               <div
                 key={i}
                 style={{
-                  padding: '24px 16px',
+                  padding: '20px 12px',
                   textAlign: 'center',
-                  borderRight: i < 3 ? '1px solid rgba(255,255,255,0.1)' : 'none',
+                  borderRight: '1px solid rgba(255,255,255,0.08)',
+                  borderBottom: '1px solid rgba(255,255,255,0.08)',
                 }}
               >
-                <div style={{ fontFamily: 'Playfair Display, serif', color: 'var(--gold)', fontSize: 28, fontWeight: 700 }}>
+                <div style={{ fontFamily: 'Playfair Display, serif', color: 'var(--gold)', fontSize: 26, fontWeight: 700 }}>
                   {stat.num}
                 </div>
                 <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 13, marginTop: 4, fontFamily: 'DM Sans, sans-serif' }}>
