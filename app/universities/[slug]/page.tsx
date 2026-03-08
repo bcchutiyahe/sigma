@@ -105,7 +105,7 @@ export default async function UniversityPage({ params }: { params: Promise<{ slu
       {/* BODY */}
       <div style={{ background: 'var(--cream)', padding: '48px 0 64px' }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 32, alignItems: 'start' }}>
+          <div className="uni-body-grid">
 
             {/* LEFT */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>

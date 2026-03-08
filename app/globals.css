@@ -353,9 +353,14 @@ h1, h2, h3, .font-playfair {
 }
 
 /* ─── Responsive grid helpers ─── */
+.uni-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+  align-items: start;
+}
 @media (max-width: 768px) {
-  /* University slug page sidebar stacks */
-  [style*="gridTemplateColumns: '1fr 320px'"] {
+  .uni-body-grid {
     grid-template-columns: 1fr !important;
   }
 }
