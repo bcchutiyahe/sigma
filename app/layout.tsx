@@ -4,6 +4,11 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import WhatsAppFAB from '@/components/layout/WhatsAppFAB'
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export const metadata: Metadata = {
   title: 'Educational Mitra — Free Admission Counselling Indore',
   description: 'Educational Mitra is Indore\'s trusted education consultancy since 2012. Free counselling for MBA, BBA, B.Tech, MBBS, Law & Study Abroad. 200+ partner colleges.',
