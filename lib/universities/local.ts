@@ -1,6 +1,6 @@
 import type { University } from './types'
 
-export const localUniversities: University[
+export const localUniversities: University[] = [
   {
     slug: 'jaipuria-indore',
     name: 'Jaipuria Institute of Management',

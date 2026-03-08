@@ -1,6 +1,6 @@
 import type { University } from './types'
 
-export const nationalUniversities: University[
+export const nationalUniversities: University[] = [
   {
     slug: 'iim-indore',
     name: 'IIM Indore',
