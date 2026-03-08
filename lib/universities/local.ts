@@ -10,7 +10,7 @@ export const localUniversities: University[] = [
     country: 'India',
     section: 'national',
     type: 'Autonomous B-School',
-    naac: 'A',
+    naac: '',
     established: 2013,
     about: 'Jaipuria Institute of Management, Indore is a premier management institution with NAAC A grade accreditation. Part of the prestigious Jaipuria Group with campuses across India, it is known for its PGDM and MBA programmes with strong industry connections.',
     highlights: ['NAAC A Grade accredited', 'Part of pan-India Jaipuria Group', 'Strong industry partnerships', 'Excellent placement record'],
