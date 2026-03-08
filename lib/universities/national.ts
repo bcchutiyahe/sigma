@@ -465,5 +465,4 @@ export const nationalUniversities: University[] = [
     website: 'https://ihm-aurangabad.com',
     logo: '',
   },
-  ] = [
 ]
