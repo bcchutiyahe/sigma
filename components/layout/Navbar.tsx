@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
-import { Menu, X, ChevronDown, Phone } from "lucide-react"
+import { Menu, X, ChevronDown, Phone, GraduationCap, Globe, BookOpen, Users, Mail, Plane, Building2 } from "lucide-react"
 
 const navLinks = [
   { name: "Universities", href: "/universities" },
@@ -10,13 +10,30 @@ const navLinks = [
     name: "Study Abroad",
     href: "/study-abroad",
     children: [
-      { name: "UK Universities", href: "/study-abroad/uk" },
-      { name: "Global MBA & MS (1+1)", href: "/study-abroad/global-mba-ms" },
+      { name: "UK Universities", href: "/study-abroad/uk", icon: "🇬🇧", desc: "Top UK colleges & universities" },
+      { name: "Global MBA & MS (1+1)", href: "/study-abroad/global-mba-ms", icon: "🌍", desc: "International dual-degree programmes" },
     ],
   },
   { name: "MBA Admissions Indore", href: "/mba-admission-indore" },
   { name: "About", href: "/#about" },
   { name: "Contact", href: "/#contact" },
+]
+
+const mobileNavCards = [
+  { name: "Universities", href: "/universities", icon: "🏫", desc: "200+ partner colleges in India" },
+  {
+    name: "Study Abroad",
+    href: "/study-abroad",
+    icon: "✈️",
+    desc: "UK, Europe & global programmes",
+    children: [
+      { name: "UK Universities", href: "/study-abroad/uk", icon: "🇬🇧", desc: "Top UK colleges & universities" },
+      { name: "Global MBA & MS (1+1)", href: "/study-abroad/global-mba-ms", icon: "🌍", desc: "International dual-degree programmes" },
+    ],
+  },
+  { name: "MBA Admissions", href: "/mba-admission-indore", icon: "🎓", desc: "Top MBA colleges in Indore" },
+  { name: "About Us", href: "/#about", icon: "🤝", desc: "Trusted counselling since 2012" },
+  { name: "Contact", href: "/#contact", icon: "📞", desc: "Talk to our experts — free" },
 ]
 
 export default function Navbar() {
@@ -65,7 +82,7 @@ export default function Navbar() {
           </div>
         </Link>
 
-        {/* Desktop nav — controlled by CSS */}
+        {/* Desktop nav */}
         <div id="em-desktop-nav">
           {navLinks.map((link) =>
             link.children ? (
@@ -77,7 +94,11 @@ export default function Navbar() {
                 <div className="em-dropdown-panel" style={{ opacity: dropdownOpen ? 1 : 0, transform: dropdownOpen ? "translateY(0)" : "translateY(-6px)", pointerEvents: dropdownOpen ? "auto" : "none" }}>
                   {link.children.map((child) => (
                     <Link key={child.href} href={child.href} className="em-dropdown-item" onClick={() => setDropdownOpen(false)}>
-                      {child.name}
+                      <span className="em-dd-icon">{child.icon}</span>
+                      <div>
+                        <span className="em-dd-name">{child.name}</span>
+                        <span className="em-dd-desc">{child.desc}</span>
+                      </div>
                     </Link>
                   ))}
                 </div>
@@ -95,7 +116,7 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile buttons — controlled by CSS */}
+        {/* Mobile buttons */}
         <div id="em-mobile-buttons">
           <a href="tel:+917909500055" aria-label="Call us" className="em-mobile-icon-btn">
             <Phone size={18} />
@@ -111,29 +132,56 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile slide-down */}
-      <div id="em-mobile-menu" style={{ maxHeight: mobileOpen ? "80vh" : "0" }}>
+      <div id="em-mobile-menu" style={{ maxHeight: mobileOpen ? "90vh" : "0" }}>
         <div className="em-mobile-inner">
-          {navLinks.map((link) =>
-            link.children ? (
-              <div key={link.name}>
-                <button className="em-mobile-link em-mobile-accordion" onClick={() => setMobileStudyAbroad(!mobileStudyAbroad)}>
-                  <span>{link.name}</span>
-                  <ChevronDown size={16} className={mobileStudyAbroad ? "em-chevron-open" : ""} />
-                </button>
-                <div className="em-mobile-children" style={{ maxHeight: mobileStudyAbroad ? "200px" : "0" }}>
-                  {link.children.map((child) => (
-                    <Link key={child.href} href={child.href} className="em-mobile-child" onClick={() => setMobileOpen(false)}>
-                      {child.name}
-                    </Link>
-                  ))}
+          <div className="em-mobile-grid">
+            {mobileNavCards.map((item) =>
+              item.children ? (
+                <div key={item.name} className="em-mobile-card-wrap">
+                  <button
+                    className="em-mobile-card em-mobile-card-accordion"
+                    onClick={() => setMobileStudyAbroad(!mobileStudyAbroad)}
+                  >
+                    <span className="em-mc-icon">{item.icon}</span>
+                    <div className="em-mc-text">
+                      <span className="em-mc-name">{item.name}</span>
+                      <span className="em-mc-desc">{item.desc}</span>
+                    </div>
+                    <ChevronDown size={16} className={`em-mc-chevron${mobileStudyAbroad ? " open" : ""}`} />
+                  </button>
+                  <div className="em-mc-children" style={{ maxHeight: mobileStudyAbroad ? "300px" : "0" }}>
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="em-mc-child"
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        <span className="em-mc-child-icon">{child.icon}</span>
+                        <div>
+                          <span className="em-mc-child-name">{child.name}</span>
+                          <span className="em-mc-child-desc">{child.desc}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <Link key={link.name} href={link.href} className="em-mobile-link" onClick={() => setMobileOpen(false)}>
-                {link.name}
-              </Link>
-            )
-          )}
+              ) : (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className="em-mobile-card"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="em-mc-icon">{item.icon}</span>
+                  <div className="em-mc-text">
+                    <span className="em-mc-name">{item.name}</span>
+                    <span className="em-mc-desc">{item.desc}</span>
+                  </div>
+                </Link>
+              )
+            )}
+          </div>
 
           <div className="em-mobile-ctas">
             <a
@@ -156,7 +204,6 @@ export default function Navbar() {
       </div>
 
       <style>{`
-        /* ── Header shell ── */
         #em-header {
           position: sticky;
           top: 0;
@@ -166,26 +213,22 @@ export default function Navbar() {
           box-shadow: 0 2px 12px rgba(0,0,0,0.18);
         }
 
-        /* ── Top bar ── */
         #em-topbar { background: var(--gold); padding: 6px 0; }
         .em-topbar-inner { display: flex; align-items: center; justify-content: center; gap: 16px; font-family: 'DM Sans', sans-serif; font-size: 13px; }
         .em-topbar-phone { color: white; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 5px; }
         .em-topbar-sep { color: rgba(255,255,255,0.35); }
         .em-topbar-hours { color: rgba(255,255,255,0.88); font-size: 12px; }
 
-        /* ── Nav row ── */
         .em-nav-row { display: flex; align-items: center; justify-content: space-between; height: 64px; }
         .em-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
 
-        /* ── Logo ── */
         .em-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; flex-shrink: 0; }
         .em-logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; display: block; }
         .em-logo-name { font-family: 'Playfair Display', serif; color: white; font-size: 17px; font-weight: 600; line-height: 1.2; margin: 0; }
         .em-logo-sub { color: var(--gold); font-size: 10px; letter-spacing: 0.09em; font-family: 'DM Sans', sans-serif; margin: 0; }
 
-        /* ── Desktop nav ── */
         #em-desktop-nav {
-          display: none; /* hidden on mobile */
+          display: none;
           align-items: center;
           gap: 2px;
         }
@@ -209,37 +252,43 @@ export default function Navbar() {
         .em-nav-link:hover { background: rgba(255,255,255,0.08); color: var(--gold); }
         .em-desktop-cta { padding: 9px 20px !important; font-size: 13px !important; margin-left: 6px; }
 
-        /* ── Dropdown ── */
+        /* Desktop dropdown */
         .em-dropdown-wrap { position: relative; }
         .em-dropdown-btn { display: inline-flex; align-items: center; gap: 4px; }
         .em-dropdown-panel {
           position: absolute;
-          top: 100%;
+          top: calc(100% + 4px);
           left: 0;
-          padding-top: 6px;
-          min-width: 220px;
+          min-width: 260px;
           z-index: 200;
+          background: white;
+          border-radius: 14px;
+          box-shadow: 0 8px 32px rgba(0,0,0,0.14);
+          border: 1px solid var(--border);
+          overflow: hidden;
           transition: opacity 0.18s ease, transform 0.18s ease;
         }
         .em-dropdown-item {
-          display: block;
-          padding: 11px 16px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 13px 16px;
           color: var(--navy);
           font-family: 'DM Sans', sans-serif;
           font-size: 14px;
-          font-weight: 500;
           text-decoration: none;
-          transition: background 0.12s, color 0.12s;
-          background: white;
-          border: 1px solid var(--border);
+          transition: background 0.12s;
+          border-bottom: 1px solid var(--border);
         }
-        .em-dropdown-item:first-child { border-radius: 12px 12px 0 0; }
-        .em-dropdown-item:last-child { border-radius: 0 0 12px 12px; }
-        .em-dropdown-item:hover { background: var(--cream); color: var(--gold-dark); }
+        .em-dropdown-item:last-child { border-bottom: none; }
+        .em-dropdown-item:hover { background: var(--cream); }
+        .em-dd-icon { font-size: 20px; flex-shrink: 0; }
+        .em-dd-name { display: block; font-weight: 600; font-size: 13px; color: var(--navy); }
+        .em-dd-desc { display: block; font-size: 11px; color: var(--text-muted); margin-top: 1px; }
         .em-chevron-open { transform: rotate(180deg); transition: transform 0.2s; }
 
-        /* ── Mobile buttons ── */
-        #em-mobile-buttons { display: flex; align-items: center; gap: 6px; } /* shown on mobile */
+        /* Mobile buttons */
+        #em-mobile-buttons { display: flex; align-items: center; gap: 6px; }
         .em-mobile-icon-btn {
           display: flex;
           align-items: center;
@@ -254,48 +303,75 @@ export default function Navbar() {
           text-decoration: none;
         }
 
-        /* ── Mobile menu panel ── */
+        /* Mobile menu */
         #em-mobile-menu {
-          background: white;
-          border-top: 1px solid var(--border);
+          background: #f8fafc;
+          border-top: 1px solid #e2e8f0;
           overflow: hidden;
-          transition: max-height 0.3s ease;
+          transition: max-height 0.32s ease;
           overflow-y: auto;
         }
-        .em-mobile-inner { padding: 8px 16px 20px; }
-        .em-mobile-link {
+        .em-mobile-inner { padding: 12px 14px 20px; }
+
+        /* Card grid */
+        .em-mobile-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+        .em-mobile-card-wrap { display: flex; flex-direction: column; }
+
+        .em-mobile-card {
           display: flex;
           align-items: center;
-          justify-content: space-between;
-          width: 100%;
-          padding: 12px 12px;
-          border-radius: 10px;
-          font-size: 15px;
-          font-weight: 500;
-          color: var(--navy);
-          font-family: 'DM Sans', sans-serif;
+          gap: 12px;
+          padding: 12px 14px;
+          background: white;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 12px;
           text-decoration: none;
-          border: none;
-          background: none;
           cursor: pointer;
-          transition: background 0.12s;
+          transition: border-color 0.15s, box-shadow 0.15s;
+          width: 100%;
+          text-align: left;
         }
-        .em-mobile-link:hover { background: rgba(201,168,76,0.07); }
-        .em-mobile-accordion { width: 100%; text-align: left; }
-        .em-mobile-children { overflow: hidden; transition: max-height 0.25s ease; }
-        .em-mobile-child {
-          display: block;
-          padding: 10px 12px 10px 28px;
-          font-size: 14px;
-          color: var(--text-muted);
+        .em-mobile-card:hover, .em-mobile-card:active {
+          border-color: var(--navy);
+          box-shadow: 0 2px 10px rgba(26,63,98,0.1);
+        }
+        .em-mobile-card-accordion { justify-content: flex-start; }
+
+        .em-mc-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align: center; }
+        .em-mc-text { flex: 1; min-width: 0; }
+        .em-mc-name { display: block; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; color: var(--navy); }
+        .em-mc-desc { display: block; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--text-muted); margin-top: 1px; }
+        .em-mc-chevron { color: var(--text-muted); flex-shrink: 0; transition: transform 0.22s; }
+        .em-mc-chevron.open { transform: rotate(180deg); }
+
+        /* Accordion children */
+        .em-mc-children {
+          overflow: hidden;
+          transition: max-height 0.25s ease;
+          padding-left: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+          margin-top: 6px;
+        }
+        .em-mc-child {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 11px 14px;
+          background: white;
+          border: 1.5px solid #e2e8f0;
+          border-radius: 10px;
           text-decoration: none;
-          font-family: 'DM Sans', sans-serif;
-          border-left: 2px solid rgba(201,168,76,0.3);
-          margin-left: 12px;
-          transition: color 0.12s;
+          transition: border-color 0.15s;
         }
-        .em-mobile-child:hover { color: var(--navy); }
-        .em-mobile-ctas { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; }
+        .em-mc-child:hover { border-color: var(--gold); }
+        .em-mc-child-icon { font-size: 20px; flex-shrink: 0; }
+        .em-mc-child-name { display: block; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; color: var(--navy); }
+        .em-mc-child-desc { display: block; font-family: 'DM Sans', sans-serif; font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+        /* CTA buttons */
+        .em-mobile-ctas { display: flex; flex-direction: column; gap: 10px; }
         .em-mobile-wa { justify-content: center; font-size: 15px !important; padding: 14px 20px !important; border-radius: 12px !important; display: flex !important; align-items: center !important; gap: 8px !important; }
         .em-mobile-call {
           display: flex;
@@ -310,13 +386,13 @@ export default function Navbar() {
           font-size: 15px;
           font-weight: 600;
           text-decoration: none;
+          background: white;
         }
 
-        /* ── BREAKPOINT: desktop ── */
         @media (min-width: 1024px) {
-          #em-desktop-nav { display: flex; }   /* show desktop nav */
-          #em-mobile-buttons { display: none; } /* hide mobile buttons */
-          #em-mobile-menu { display: none; }    /* hide mobile menu entirely */
+          #em-desktop-nav { display: flex; }
+          #em-mobile-buttons { display: none; }
+          #em-mobile-menu { display: none; }
         }
       `}</style>
     </header>

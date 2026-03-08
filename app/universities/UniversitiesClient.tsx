@@ -1,5 +1,5 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { Search, MapPin, ArrowRight, Filter } from 'lucide-react'
 import { allUniversities } from '@/lib/universities'
@@ -8,12 +8,49 @@ import UniLogo from '@/components/ui/UniLogo'
 
 const sectionTabs = [
   { id: 'all', label: 'All' },
-  { id: 'local', label: '🏙️ Local — Indore & MP' },
   { id: 'national', label: '🇮🇳 National' },
   { id: 'international', label: '✈️ International' },
 ]
 
 const courseFilters = ['All', 'MBA', 'BBA', 'B.Tech', 'Law', 'Medical', 'Design', 'Hotel Mgmt', 'Study Abroad']
+
+function SkeletonCard() {
+  return (
+    <div style={{
+      background: 'white',
+      borderRadius: 14,
+      padding: 16,
+      border: '1px solid #e2e8f0',
+      height: 180,
+      position: 'relative',
+      overflow: 'hidden',
+    }}>
+      <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+        <div style={{ width: 44, height: 44, borderRadius: 10, background: '#f1f5f9', flexShrink: 0 }} />
+        <div style={{ flex: 1 }}>
+          <div style={{ height: 14, background: '#f1f5f9', borderRadius: 6, marginBottom: 8, width: '70%' }} />
+          <div style={{ height: 11, background: '#f1f5f9', borderRadius: 6, width: '45%' }} />
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 14 }}>
+        {[60, 50, 45].map((w, i) => (
+          <div key={i} style={{ height: 24, background: '#f1f5f9', borderRadius: 20, width: w }} />
+        ))}
+      </div>
+      <div style={{ height: 1, background: '#f1f5f9', marginBottom: 12 }} />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ height: 11, background: '#f1f5f9', borderRadius: 6, width: '35%' }} />
+        <div style={{ height: 11, background: '#f1f5f9', borderRadius: 6, width: '25%' }} />
+      </div>
+      {/* shimmer */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.7) 50%, transparent 100%)',
+        animation: 'uc-shimmer 1.1s infinite',
+      }} />
+    </div>
+  )
+}
 
 function UniCard({ uni }: { uni: University }) {
   return (
@@ -67,6 +104,9 @@ export default function UniversitiesClient() {
   const [section, setSection] = useState('all')
   const [course, setCourse] = useState('All')
   const [search, setSearch] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [displayedUnis, setDisplayedUnis] = useState<University[]>([])
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const filtered = useMemo(() => {
     return allUniversities.filter(u => {
@@ -74,7 +114,7 @@ export default function UniversitiesClient() {
       if (course !== 'All') {
         const cMap: Record<string, string[]> = {
           'MBA': ['MBA', 'PGDM', 'MBA+PGB'], 'BBA': ['BBA'], 'B.Tech': ['B.Tech'],
-          'Law': ['LLB', 'BA LLB', 'BBA LLB', 'LLM'], 'Medical': ['MBBS', 'BDS', 'BSc Nursing', 'MBBS'],
+          'Law': ['LLB', 'BA LLB', 'BBA LLB', 'LLM'], 'Medical': ['MBBS', 'BDS', 'BSc Nursing'],
           'Design': ['B.Des', 'BFA', 'M.Des'], 'Hotel Mgmt': ['BSc Hotel Management', 'Diploma in Hotel Management'],
           'Study Abroad': [],
         }
@@ -90,8 +130,35 @@ export default function UniversitiesClient() {
     })
   }, [section, course, search])
 
+  // Trigger loading animation whenever filters change
+  useEffect(() => {
+    setLoading(true)
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      setDisplayedUnis(filtered)
+      setLoading(false)
+    }, search ? 350 : 420)
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current) }
+  }, [filtered])
+
+  const SKELETON_COUNT = Math.min(displayedUnis.length || 6, 12)
+
   return (
     <>
+      <style>{`
+        @keyframes uc-shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        .uc-grid-enter {
+          animation: uc-fadein 0.28s ease forwards;
+        }
+        @keyframes uc-fadein {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+
       <div className="page-hero">
         <div className="container">
           <h1 style={{ fontFamily: 'Playfair Display, serif', fontSize: 'clamp(28px,4vw,44px)', color: 'white', marginBottom: 12 }}>
@@ -145,18 +212,31 @@ export default function UniversitiesClient() {
 
       <div style={{ background: 'var(--cream)', padding: '32px 0 64px' }}>
         <div className="container">
-          <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 24 }}>
-            Showing <strong>{filtered.length}</strong> universities
+          <p style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 24, display: 'flex', alignItems: 'center', gap: 8 }}>
+            {loading ? (
+              <>
+                <span style={{ display: 'inline-block', width: 14, height: 14, border: '2px solid var(--navy)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'uc-spin 0.7s linear infinite' }} />
+                <style>{`@keyframes uc-spin { to { transform: rotate(360deg); } }`}</style>
+                Sorting…
+              </>
+            ) : (
+              <>Showing <strong style={{ marginLeft: 3, marginRight: 3 }}>{displayedUnis.length}</strong> universities</>
+            )}
           </p>
-          {filtered.length === 0 ? (
+
+          {loading ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              {[...Array(SKELETON_COUNT)].map((_, i) => <SkeletonCard key={i} />)}
+            </div>
+          ) : displayedUnis.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '60px 20px' }}>
               <p style={{ fontSize: 40, marginBottom: 12 }}>🔍</p>
               <p style={{ fontSize: 18, color: 'var(--navy)', fontFamily: 'Playfair Display, serif', marginBottom: 8 }}>No results found</p>
               <p style={{ color: 'var(--text-muted)' }}>Try a different search or filter</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
-              {filtered.map(uni => <UniCard key={uni.slug} uni={uni} />)}
+            <div className="uc-grid-enter" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+              {displayedUnis.map(uni => <UniCard key={uni.slug} uni={uni} />)}
             </div>
           )}
         </div>
